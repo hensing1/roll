@@ -61,5 +61,6 @@ $ roll d20 d100 d592
 Sum: 700
 ```
 
-Created by [Henning Lehmann](github.com/hensing1).
+Created by [Henning Lehmann](https://github.com/hensing1).
+
 Happy rolling!
