@@ -171,10 +171,10 @@ void check_achievements(rolls_t rolls) {
         else if (rolls.rolls[i].num_sides < 0) {
             has_negative = 1;
         }
-        else if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].num_sides != rolls.rolls[i].value) {
+        if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].num_sides != rolls.rolls[i].value) {
             lucky_day = 0;
         }
-        else if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].value != 0) {
+        if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].value != 1) {
             oof = 0;
         }
         if (rolls.rolls[i].value == 69) {
@@ -183,24 +183,24 @@ void check_achievements(rolls_t rolls) {
     }
 
     if (has_0) {
-        printf("🏆 Achievement unlocked!\n");
-        printf("WTF is a d0?!\n");
+        printf("\n=== 🏆 Achievement unlocked! ===\n");
+        printf("         WTF is a d0?!\n\n");
     }
     if (has_negative) {
-        printf("🏆 Achievement unlocked!\n");
-        printf("N E G A T I V E  D I C E\n");
+        printf("\n=== 🏆 Achievement unlocked! ===\n");
+        printf("    N E G A T I V E  D I C E\n\n");
     }
     if (lucky_day) {
-        printf("🍀 Achievement unlocked!\n");
-        printf("Lucky day :)\n");
+        printf("\n=== 🍀 Achievement unlocked! ===\n");
+        printf("          Lucky day :)\n\n");
     }
     if (oof) {
-        printf("💀 Achievement unlocked!\n");
-        printf("oof\n");
+        printf("\n=== 💀 Achievement unlocked! ===\n");
+        printf("               oof\n\n");
     }
     if (nice) {
-        printf("🏆 Achievement unlocked!\n");
-        printf("nice.\n");
+        printf("\n=== 🏆 Achievement unlocked! ===\n");
+        printf("              nice.\n\n");
     }
 }
 
