@@ -16,6 +16,7 @@ typedef struct {
     size_t capacity;
 } rolls_t;
 
+void check_achievements(rolls_t rolls);
 void init_rng();
 void insert(rolls_t* rolls, roll_t roll);
 regex_t make_regex();
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]) {
         exec_command(argv[i], &regex, &rolls);
     }
 
+    check_achievements(rolls);
     print_rolls(rolls);
 
     if (rolls.num_rolls > 1) {
@@ -153,6 +155,53 @@ roll_t make_roll(int max) {
         .num_sides = max,
         .value = random() % max + 1
     };
+}
+
+
+void check_achievements(rolls_t rolls) {
+    char has_0 = 0;
+    char has_negative = 0;
+    char lucky_day = rolls.num_rolls > 1;
+    char oof = rolls.num_rolls > 1;
+    char nice = 0;
+    for (int i = 0; i < rolls.num_rolls; i++) {
+        if (rolls.rolls[i].num_sides == 0) {
+            has_0 = 1;
+        }
+        else if (rolls.rolls[i].num_sides < 0) {
+            has_negative = 1;
+        }
+        else if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].num_sides != rolls.rolls[i].value) {
+            lucky_day = 0;
+        }
+        else if (rolls.rolls[i].num_sides < 20 || rolls.rolls[i].value != 0) {
+            oof = 0;
+        }
+        if (rolls.rolls[i].value == 69) {
+            nice = 1;
+        }
+    }
+
+    if (has_0) {
+        printf("🏆 Achievement unlocked!\n");
+        printf("WTF is a d0?!\n");
+    }
+    if (has_negative) {
+        printf("🏆 Achievement unlocked!\n");
+        printf("N E G A T I V E  D I C E\n");
+    }
+    if (lucky_day) {
+        printf("🍀 Achievement unlocked!\n");
+        printf("Lucky day :)\n");
+    }
+    if (oof) {
+        printf("💀 Achievement unlocked!\n");
+        printf("oof\n");
+    }
+    if (nice) {
+        printf("🏆 Achievement unlocked!\n");
+        printf("nice.\n");
+    }
 }
 
 
