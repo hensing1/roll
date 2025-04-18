@@ -85,7 +85,7 @@ void insert(rolls_t* rolls, roll_t roll) {
 
 regex_t make_regex() {
     regex_t regex;
-    int ret = regcomp(&regex, "(([0-9]*)d([0-9]+))(\\+([0-9]*)d([0-9]+))*", REG_EXTENDED);
+    int ret = regcomp(&regex, "([0-9]*)d([0-9]+)", REG_EXTENDED);
     if (ret) {
         printf("shit fuck\n");
         exit(1);
@@ -101,36 +101,36 @@ void exec_command(char* command, regex_t* regex, rolls_t* rolls) {
         return;
     }
 
-    regmatch_t matches[256];
-    int ret = regexec(regex, command, 256, matches, 0);
-    if (ret == 0) {
-        // first match: entire match
-        // then: three matches per capture group
-        // 1. entire capture group (e.g. 2d20)
-        // 2. num of dice (may be empty)
-        // 3. sides of dice
+    while (1) {
 
-        int i = 1;
-        while (matches[i].rm_so != -1) {
-            regmatch_t match_num_dice = matches[i + 1];
-            regmatch_t match_sides_dice = matches[i + 2];
-
-            int num_dice = (match_num_dice.rm_so == match_num_dice.rm_eo) ?
-                1 :
-                substr2int(command, match_num_dice.rm_so, match_num_dice.rm_eo);
-
-            int sides_dice = substr2int(command, match_sides_dice.rm_so, match_sides_dice.rm_eo);
-
-            for (int i = 0; i < num_dice; i++) {
-                insert(rolls, make_roll(sides_dice));
-            }
-
-            i += 3;
+        regmatch_t matches[3];
+        int ret = regexec(regex, command, 3, matches, 0);
+        if (ret != 0) {
+            break;
         }
-    }
-    else {
-        printf("arg %s not recognized, rolling a d6 instead\n", command);
-        insert(rolls, make_roll(6));
+
+        // first match: entire match
+        // second: num of dice (may be empty)
+        // third: sides of dice
+
+        regmatch_t match_num_dice = matches[1];
+        regmatch_t match_sides_dice = matches[2];
+
+        int num_dice = (match_num_dice.rm_so == match_num_dice.rm_eo) ?
+            1 :
+            substr2int(command, match_num_dice.rm_so, match_num_dice.rm_eo);
+
+        int sides_dice = substr2int(command, match_sides_dice.rm_so, match_sides_dice.rm_eo);
+
+        for (int i = 0; i < num_dice; i++) {
+            insert(rolls, make_roll(sides_dice));
+        }
+
+        command += matches[0].rm_eo; // advance pointer
+        if (command[0] != '+') {
+            break;
+        }
+        command++;
     }
 }
 
@@ -143,6 +143,12 @@ void print_rolls(rolls_t rolls) {
 
 
 roll_t make_roll(int max) {
+    if (max == 0) {
+        return (roll_t) {
+            .num_sides = 0,
+            .value = -1
+        };
+    }
     return (roll_t) {
         .num_sides = max,
         .value = random() % max + 1
