@@ -7,6 +7,8 @@ Roll dice in the command line.
 On Linux:
 
 ```bash
+$ git clone git@github.com:hensing1/roll.git
+$ cd roll
 $ make
 cc main.c -o roll
 $ make install
@@ -59,4 +61,5 @@ $ roll d20 d100 d592
 Sum: 700
 ```
 
-Happy rolling, may the odds be ever in your favor!
+Created by [Henning Lehmann](github.com/hensing1).
+Happy rolling!
